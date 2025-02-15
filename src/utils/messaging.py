@@ -2,14 +2,22 @@ from twilio.rest import Client
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+import streamlit as st
 
 load_dotenv()
 
 class MessageService:
     def __init__(self):
-        self.account_sid = os.getenv('TWILIO_ACCOUNT_SID')
-        self.auth_token = os.getenv('TWILIO_AUTH_TOKEN')
-        self.from_number = os.getenv('TWILIO_PHONE_NUMBER')  # Changed to match .env.example
+        # Try to get credentials from Streamlit secrets first, then fall back to env vars
+        try:
+            self.account_sid = st.secrets.twilio.TWILIO_ACCOUNT_SID
+            self.auth_token = st.secrets.twilio.TWILIO_AUTH_TOKEN
+            self.from_number = st.secrets.twilio.TWILIO_PHONE_NUMBER
+        except Exception:
+            # Fall back to environment variables
+            self.account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+            self.auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+            self.from_number = os.getenv('TWILIO_PHONE_NUMBER')
         
         if not all([self.account_sid, self.auth_token, self.from_number]):
             print(f"Missing Twilio credentials:")
