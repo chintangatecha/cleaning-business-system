@@ -20,8 +20,13 @@ if DATABASE_URL.startswith("sqlite"):
         DATABASE_URL, connect_args={"check_same_thread": False}
     )
 else:
-    # For PostgreSQL or other databases
-    engine = create_engine(DATABASE_URL)
+    # For PostgreSQL with SSL support
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={
+            "sslmode": "require"
+        }
+    )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
