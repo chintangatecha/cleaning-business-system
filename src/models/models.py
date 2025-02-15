@@ -91,6 +91,28 @@ class Invoice(Base):
     job = relationship("Job", back_populates="invoice")
     payment = relationship("Payment", back_populates="invoice", uselist=False)
 
+class MessageTemplate(Base):
+    __tablename__ = "message_templates"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    content = Column(String)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+class MessageHistory(Base):
+    __tablename__ = "message_history"
+
+    id = Column(Integer, primary_key=True, index=True)
+    client_name = Column(String)
+    phone_number = Column(String)
+    message = Column(String)
+    status = Column(String)  # success/failed
+    error = Column(String, nullable=True)
+    scheduled_for = Column(DateTime, nullable=True)
+    sent_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
 class Payment(Base):
     __tablename__ = "payments"
 
