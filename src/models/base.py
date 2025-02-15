@@ -32,9 +32,21 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# Import all models here
+from .models import Client, Cleaner, Job, Roster, Invoice, Payment, MessageTemplate, MessageHistory
+
 def init_db():
     """Initialize the database tables"""
+    print("Creating database tables...")
     Base.metadata.create_all(bind=engine)
+    print("Database tables created successfully!")
 
 # Initialize tables
 init_db()
